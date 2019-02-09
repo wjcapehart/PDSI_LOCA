@@ -311,7 +311,7 @@ ensembles = c( "ACCESS1-0_r1i1p1",
           agg = "CDO_MONTLY_TOTAL"
 
           variable = str_c(var,
-                           ens,
+                           Ensemble,
                            scen,
                            sep = "_")
           
@@ -340,7 +340,7 @@ ensembles = c( "ACCESS1-0_r1i1p1",
           agg = "CDO_MONTLY_MEAN"
           
           variable = str_c(var,
-                           ens,
+                           Ensemble,
                            scen,
                            sep = "_")
           
@@ -369,7 +369,7 @@ ensembles = c( "ACCESS1-0_r1i1p1",
           agg = "CDO_MONTLY_MEAN"
           
           variable = str_c(var,
-                           ens,
+                           Ensemble,
                            scen,
                            sep = "_")
           
@@ -405,7 +405,7 @@ ensembles = c( "ACCESS1-0_r1i1p1",
           agg = "CDO_MONTLY_TOTAL"
           
           variable = str_c(var,
-                           ens,
+                           Ensemble,
                            scen,
                            sep = "_")
           
@@ -434,7 +434,7 @@ ensembles = c( "ACCESS1-0_r1i1p1",
           agg = "CDO_MONTLY_MEAN"
           
           variable = str_c(var,
-                           ens,
+                           Ensemble,
                            scen,
                            sep = "_")
           
@@ -463,7 +463,7 @@ ensembles = c( "ACCESS1-0_r1i1p1",
           agg = "CDO_MONTLY_MEAN"
           
           variable = str_c(var,
-                           ens,
+                           Ensemble,
                            scen,
                            sep = "_")
           
@@ -499,7 +499,7 @@ ensembles = c( "ACCESS1-0_r1i1p1",
           agg = "CDO_MONTLY_TOTAL"
           
           variable = str_c(var,
-                           ens,
+                           Ensemble,
                            scen,
                            sep = "_")
           
@@ -528,7 +528,7 @@ ensembles = c( "ACCESS1-0_r1i1p1",
           agg = "CDO_MONTLY_MEAN"
           
           variable = str_c(var,
-                           ens,
+                           Ensemble,
                            scen,
                            sep = "_")
           
@@ -557,7 +557,7 @@ ensembles = c( "ACCESS1-0_r1i1p1",
           agg = "CDO_MONTLY_MEAN"
           
           variable = str_c(var,
-                           ens,
+                           Ensemble,
                            scen,
                            sep = "_")
           
@@ -609,7 +609,7 @@ ensembles = c( "ACCESS1-0_r1i1p1",
             var = "pr"
             
             variable = str_c(var,
-                             ens,
+                             Ensemble,
                              scen,
                              sep = "_")
             
@@ -632,7 +632,7 @@ ensembles = c( "ACCESS1-0_r1i1p1",
             agg = "CDO_MONTLY_MEAN"
             
             variable = str_c(var,
-                             ens,
+                             Ensemble,
                              scen,
                              sep = "_")
             
@@ -653,7 +653,7 @@ ensembles = c( "ACCESS1-0_r1i1p1",
             agg = "CDO_MONTLY_MEAN"
             
             variable = str_c(var,
-                             ens,
+                             Ensemble,
                              scen,
                              sep = "_")
             
@@ -683,7 +683,7 @@ ensembles = c( "ACCESS1-0_r1i1p1",
             var = "pr"
             
             variable = str_c(var,
-                             ens,
+                             Ensemble,
                              scen,
                              sep = "_")
             
@@ -705,7 +705,7 @@ ensembles = c( "ACCESS1-0_r1i1p1",
             agg = "CDO_MONTLY_MEAN"
             
             variable = str_c(var,
-                             ens,
+                             Ensemble,
                              scen,
                              sep = "_")
             
@@ -726,7 +726,7 @@ ensembles = c( "ACCESS1-0_r1i1p1",
             agg = "CDO_MONTLY_MEAN"
             
             variable = str_c(var,
-                             ens,
+                             Ensemble,
                              scen,
                              sep = "_")
             
@@ -755,7 +755,7 @@ ensembles = c( "ACCESS1-0_r1i1p1",
             var = "pr"
             
             variable = str_c(var,
-                             ens,
+                             Ensemble,
                              scen,
                              sep = "_")
             
@@ -777,7 +777,7 @@ ensembles = c( "ACCESS1-0_r1i1p1",
             agg = "CDO_MONTLY_MEAN"
             
             variable = str_c(var,
-                             ens,
+                             Ensemble,
                              scen,
                              sep = "_")
             
@@ -798,7 +798,7 @@ ensembles = c( "ACCESS1-0_r1i1p1",
             agg = "CDO_MONTLY_MEAN"
             
             variable = str_c(var,
-                             ens,
+                             Ensemble,
                              scen,
                              sep = "_")
             
@@ -822,7 +822,7 @@ ensembles = c( "ACCESS1-0_r1i1p1",
         
         
         print(str_c("     "))
-        print(str_c("   - Beginning Latitude Loop for ", Ensemble ," ", (lon_i*100.0/length(longitue)),"%" ))
+        print(str_c("   - Beginning Latitude Loop for ", Ensemble ," ", (lon_i*100.0/length(longitude)),"%" ))
         print(str_c("     "))
         
         cl = makeCluster(4)
