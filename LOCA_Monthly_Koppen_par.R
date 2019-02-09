@@ -585,7 +585,7 @@ ensembles = c( "ACCESS1-0_r1i1p1",
     } # Open Files for Reading   
     
     print(str_c("     "))
-    print(str_c("   - Marching Through Data"))
+    print(str_c("   - Marching Through Data ", Ensemble))
     print(str_c("     "))
 
     
@@ -822,10 +822,10 @@ ensembles = c( "ACCESS1-0_r1i1p1",
         
         
         print(str_c("     "))
-        print(str_c("   - Beginning Latitude Loop"))
+        print(str_c("   - Beginning Latitude Loop for ", Ensemble ," ", (lon_i*100.0/length(longitue)),"%" ))
         print(str_c("     "))
         
-        cl = makeCluster(3)
+        cl = makeCluster(4)
         registerDoParallel(cl)
         
         foreach(lat_j = 1:length(latitude)) %dopar% { # latitude

@@ -585,7 +585,7 @@ ensembles = c( "ACCESS1-0_r1i1p1",
     } # Open Files for Reading   
     
     print(str_c("     "))
-    print(str_c("   - Marching Through Data"))
+    print(str_c("   - Marching Through Data ", Ensemble))
     print(str_c("     "))
 
     
@@ -820,7 +820,9 @@ ensembles = c( "ACCESS1-0_r1i1p1",
         #       
         # Create Parallel Block Here
         
-
+        print(str_c("     "))
+        print(str_c("   - Beginning Latitude Loop for ", Ensemble ," ", (lon_i*100.0/length(longitue)),"%" ))
+        print(str_c("     "))
         
         for (Latitude in latitude) 
         { # latitude
