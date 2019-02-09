@@ -821,7 +821,7 @@ ensembles = c( "ACCESS1-0_r1i1p1",
         # Create Parallel Block Here
         
         print(str_c("     "))
-        print(str_c("   - Beginning Latitude Loop for ", Ensemble ," ", (lon_i*100.0/length(longitue)),"%" ))
+        print(str_c("   - Beginning Latitude Loop for ", Ensemble ," ", (lon_i*100.0/length(longitude)),"%" ))
         print(str_c("     "))
         
         for (Latitude in latitude) 
