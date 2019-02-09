@@ -1,0 +1,559 @@
+---
+title: "PDSI Index"
+output: html_notebook
+---
+
+
+
+```{r}
+
+
+  library(package = "tidyverse")
+  library(package = "tidypredict")
+
+  library(package = "lubridate") # processing dates and time
+  library(package = "stringr")
+
+
+  library(package = "reshape2")  # manipulating data frames
+  library(package = "extRemes")  # extreme data analysis
+  library(package = "abind")
+
+  library(package = "ncdf4")
+  library(package = "ncdf4.helpers")
+  
+  library(package = "PCICt")
+  
+```
+
+File Control
+
+```{r}
+
+# File Control
+
+  URL_Root = "http://kyrill.ias.sdsmt.edu:8080/thredds/catalog/LOCA_NGP/climatology/"
+  URL_Root = "~/GitHub/PDSI_LOCA/LOCA_Local_Files/LOCA_NGP/climatology/"
+
+
+```
+
+
+
+```{r}
+# Ensemble Members
+
+ensembles = c( "ACCESS1-0_r1i1p1",
+               "ACCESS1-3_r1i1p1",
+               "CCSM4_r6i1p1",
+               "CESM1-BGC_r1i1p1",
+               "CESM1-CAM5_r1i1p1",
+               "CMCC-CMS_r1i1p1",
+               "CMCC-CM_r1i1p1",
+               "CNRM-CM5_r1i1p1",
+               "CSIRO-Mk3-6-0_r1i1p1",
+               "CanESM2_r1i1p1",
+               "FGOALS-g2_r1i1p1",
+               "GFDL-CM3_r1i1p1",
+               "GFDL-ESM2G_r1i1p1",
+               "GFDL-ESM2M_r1i1p1",
+               "HadGEM2-AO_r1i1p1",
+               "HadGEM2-CC_r1i1p1",
+               "HadGEM2-ES_r1i1p1",
+               "IPSL-CM5A-LR_r1i1p1",
+               "IPSL-CM5A-MR_r1i1p1",
+               "MIROC-ESM_r1i1p1",
+               "MIROC5_r1i1p1",
+               "MPI-ESM-LR_r1i1p1",
+               "MPI-ESM-MR_r1i1p1",
+               "MRI-CGCM3_r1i1p1",
+               "NorESM1-M_r1i1p1",
+               "bcc-csm1-1-m_r1i1p1" )
+
+```
+
+
+Read Metadata
+
+```{r}
+
+# extract the time series information.
+#
+
+
+ens  = ensembles[1]
+var = "pr"
+agg = "CDO_MONTLY_TOTAL"
+
+
+  # historical time information
+
+  scen   = "historical"
+  period = "1950-2005"
+  
+  variable = str_c(var,
+                   ens,
+                   scen,
+                   sep = "_")
+  
+  
+  URL_Name = str_c(URL_Root,
+                   period,
+                   "/MONTHLY/",
+                   var,
+                   "/LOCA_NGP_",
+                   variable,
+                   "_",
+                   period,
+                   "_",
+                   agg,
+                   ".nc",
+                   sep = "")
+  
+  
+  ncf = nc_open(filename = URL_Name)
+  
+    longitude        = ncvar_get(nc           = ncf, 
+                                 varid        = "lon", 
+                                 verbose      = FALSE,
+                                 raw_datavals = FALSE )
+  
+    latitude         = ncvar_get(nc           = ncf, 
+                                 varid        = "lat", 
+                                 verbose      = FALSE,
+                                 raw_datavals = FALSE )  
+    
+    longitude_bounds = ncvar_get(nc           = ncf, 
+                                 varid        = "lon_bnds", 
+                                 verbose      = FALSE,
+                                 raw_datavals = FALSE )
+      
+    
+    latitude_bounds =  ncvar_get(nc           = ncf, 
+                                 varid        = "lat_bnds", 
+                                 verbose      = FALSE,
+                                 raw_datavals = FALSE )      
+    
+    time_historial  = nc.get.time.series(f                            = ncf, 
+                                         v                            = variable, 
+                                         time.dim.name                = "time", 
+                                         correct.for.gregorian.julian = FALSE, 
+                                         return.bounds                = FALSE)
+    
+    time_historial = as.POSIXct(x  = time_historial,
+                                tz = "UTC")
+    
+  remove(ncf)
+  
+  
+  # historical time information
+
+  scen   = "rcp85"
+  period = "2006-2099"
+  
+  variable = str_c(var,
+                   ens,
+                   scen,
+                   sep = "_")
+  
+  
+  URL_Name = str_c(URL_Root,
+                   period,
+                   "/MONTHLY/",
+                   var,
+                   "/LOCA_NGP_",
+                   variable,
+                   "_",
+                   period,
+                   "_",
+                   agg,
+                   ".nc",
+                   sep = "")
+  
+  
+  ncf = nc_open(filename = URL_Name)
+  
+    time_futr = nc.get.time.series(f                            = ncf, 
+                                   v                            = variable, 
+                                   time.dim.name                = "time", 
+                                   correct.for.gregorian.julian = FALSE, 
+                                   return.bounds                = FALSE)
+    
+    time_futr = as.POSIXct(x  = time_futr, 
+                           tz = "UTC")
+    
+  remove(ncf)    
+  
+  time = append(x      = time_historial,
+                values = time_futr)
+  
+  t0h = 1
+  t9h = length(time_historial)
+  
+  t0f = t9h + 1
+  t9f = length(time)   
+  
+  print("Time Limits")
+  print(time[t0h])
+  print(time[t9h])
+  print(time[t0f])
+  print(time[t0f])
+
+```
+
+Select Point Extraction
+
+```{r}
+
+  target_lon =  -101.5988405
+  target_lat =    44.0487306
+  
+  i_targ = which(abs(longitude - target_lon) == min(abs(longitude - target_lon)))
+  j_targ = which(abs(latitude  - target_lat) == min(abs(latitude  - target_lat)))
+
+
+```
+
+Input Variables by Enseble
+
+```{r}
+
+ens = ensembles[1]
+
+
+{ # Ensemble
+
+  { # Historical Period
+    
+    scen   = "historical"
+    period = "1950-2005"
+    
+    { # pr
+  
+      var = "pr"
+      
+      variable = str_c(var,
+                       ens,
+                       scen,
+                       sep = "_")
+    
+      URL_Name = str_c(URL_Root,
+                       period,
+                       "/MONTHLY/",
+                       var,
+                       "/LOCA_NGP_",
+                       variable,
+                       "_",
+                       period,
+                       "_",
+                       agg,
+                       ".nc",
+                       sep = "")
+    
+      nc_f = nc_open(filename = URL_Name)
+    
+      pr_h = ncvar_get(nc           = nc_f,
+                       varid        = variable,
+                       verbose      = FALSE,
+                       raw_datavals = FALSE) 
+      
+      dimnames(x = pr_h) = list(longitude = longitude,
+                                latitude  = latitude,
+                                time      = time_historial)
+      
+    } # pr
+    
+    { # tasmin
+  
+      var = "tasmin"
+      
+      variable = str_c(var,
+                       ens,
+                       scen,
+                       sep = "_")
+    
+      URL_Name = str_c(URL_Root,
+                       period,
+                       "/MONTHLY/",
+                       var,
+                       "/LOCA_NGP_",
+                       variable,
+                       "_",
+                       period,
+                       "_",
+                       agg,
+                       ".nc",
+                       sep = "")
+    
+      nc_f = nc_open(filename = URL_Name)
+    
+      tmin_h = ncvar_get(nc           = nc_f,
+                         varid        = variable,
+                         verbose      = FALSE,
+                         raw_datavals = FALSE)  
+      
+      dimnames(x = tmin_h) = list(longitude = longitude,
+                                  latitude  = latitude,
+                                  time      = time_historial)
+    } # tasmin
+  
+    { # tasmax
+  
+      var = "tasmax"
+      
+      variable = str_c(var,
+                       ens,
+                       scen,
+                       sep = "_")
+    
+      URL_Name = str_c(URL_Root,
+                       period,
+                       "/MONTHLY/",
+                       var,
+                       "/LOCA_NGP_",
+                       variable,
+                       "_",
+                       period,
+                       "_",
+                       agg,
+                       ".nc",
+                       sep = "")
+    
+      nc_f = nc_open(filename = URL_Name)
+    
+      tmax_h = ncvar_get(nc           = nc_f,
+                         varid        = variable,
+                         verbose      = FALSE,
+                         raw_datavals = FALSE)  
+      
+      dimnames(x = tmax_h) = list(longitude   = longitude,
+                                  latitude    = latitude,
+                                  time        = time_historial)
+    } # tasmax
+  
+  } # Historical Period
+  
+  { # RCP 4.5
+
+    scen   = "rcp45"
+    period = "2006-2099"
+    
+    { # pr
+  
+      var = "pr"
+      
+      variable = str_c(var,
+                       ens,
+                       scen,
+                       sep = "_")
+    
+      URL_Name = str_c(URL_Root,
+                       period,
+                       "/MONTHLY/",
+                       var,
+                       "/LOCA_NGP_",
+                       variable,
+                       "_",
+                       period,
+                       "_",
+                       agg,
+                       ".nc",
+                       sep = "")
+    
+      nc_f = nc_open(filename = URL_Name)
+    
+      pr_4 = ncvar_get(nc           = nc_f,
+                       varid        = variable,
+                       verbose      = FALSE,
+                       raw_datavals = FALSE) 
+      
+      dimnames(x = pr_4) = list(longitude   = longitude,
+                                latitude    = latitude,
+                                time        = time_future)
+      
+    } # pr
+    
+    { # tasmin
+  
+      var = "tasmin"
+      
+      variable = str_c(var,
+                       ens,
+                       scen,
+                       sep = "_")
+    
+      URL_Name = str_c(URL_Root,
+                       period,
+                       "/MONTHLY/",
+                       var,
+                       "/LOCA_NGP_",
+                       variable,
+                       "_",
+                       period,
+                       "_",
+                       agg,
+                       ".nc",
+                       sep = "")
+    
+      nc_f = nc_open(filename = URL_Name)
+    
+      tmin_4 = ncvar_get(nc           = nc_f,
+                         varid        = variable,
+                         verbose      = FALSE,
+                         raw_datavals = FALSE)  
+      
+      dimnames(x = tmin_4) = list(longitude   = longitude,
+                                  latitude    = latitude,
+                                  time        = time_future)
+    } # tasmin
+  
+    { # tasmax
+  
+      var = "tasmax"
+      
+      variable = str_c(var,
+                       ens,
+                       scen,
+                       sep = "_")
+    
+      URL_Name = str_c(URL_Root,
+                       period,
+                       "/MONTHLY/",
+                       var,
+                       "/LOCA_NGP_",
+                       variable,
+                       "_",
+                       period,
+                       "_",
+                       agg,
+                       ".nc",
+                       sep = "")
+    
+      nc_f = nc_open(filename = URL_Name)
+    
+      tmax_4 = ncvar_get(nc           = nc_f,
+                         varid        = variable,
+                         verbose      = FALSE,
+                         raw_datavals = FALSE)  
+      
+      dimnames(x = tmax_4) = list(longitude   = longitude,
+                                  latitude    = latitude,
+                                  time        = time_future)
+    } # tasmax
+  
+  } # RCP 4.5
+
+  { # RCP 8.5
+    
+    scen   = "rcp45"
+    period = "2006-2099"
+    
+    { # pr
+  
+      var = "pr"
+      
+      variable = str_c(var,
+                       ens,
+                       scen,
+                       sep = "_")
+    
+      URL_Name = str_c(URL_Root,
+                       period,
+                       "/MONTHLY/",
+                       var,
+                       "/LOCA_NGP_",
+                       variable,
+                       "_",
+                       period,
+                       "_",
+                       agg,
+                       ".nc",
+                       sep = "")
+    
+      nc_f = nc_open(filename = URL_Name)
+    
+      pr_8 = ncvar_get(nc           = nc_f,
+                       varid        = variable,
+                       verbose      = FALSE,
+                       raw_datavals = FALSE) 
+      
+      dimnames(x = pr_8) = list(longitude   = longitude,
+                                latitude    = latitude,
+                                time        = time_future)
+      
+    } # pr
+    
+    { # tasmin
+  
+      var = "tasmin"
+      
+      variable = str_c(var,
+                       ens,
+                       scen,
+                       sep = "_")
+    
+      URL_Name = str_c(URL_Root,
+                       period,
+                       "/MONTHLY/",
+                       var,
+                       "/LOCA_NGP_",
+                       variable,
+                       "_",
+                       period,
+                       "_",
+                       agg,
+                       ".nc",
+                       sep = "")
+    
+      nc_f = nc_open(filename = URL_Name)
+    
+      tmin_8 = ncvar_get(nc           = nc_f,
+                         varid        = variable,
+                         verbose      = FALSE,
+                         raw_datavals = FALSE)  
+      
+      dimnames(x = tmin_8) = list(longitude   = longitude,
+                                  latitude    = latitude,
+                                  time        = time_future)
+    } # tasmin
+  
+    { # tasmax
+  
+      var = "tasmax"
+      
+      variable = str_c(var,
+                       ens,
+                       scen,
+                       sep = "_")
+    
+      URL_Name = str_c(URL_Root,
+                       period,
+                       "/MONTHLY/",
+                       var,
+                       "/LOCA_NGP_",
+                       variable,
+                       "_",
+                       period,
+                       "_",
+                       agg,
+                       ".nc",
+                       sep = "")
+    
+      nc_f = nc_open(filename = URL_Name)
+    
+      tmax_8 = ncvar_get(nc           = nc_f,
+                         varid        = variable,
+                         verbose      = FALSE,
+                         raw_datavals = FALSE)  
+      
+      dimnames(x = tmax_8) = list(longitude   = longitude,
+                                  latitude    = latitude,
+                                  time        = time_future)
+    } # tasmax
+  
+  } # RCP 8.5
+    
+} # Ensemble
+
+```
+

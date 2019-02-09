@@ -1,0 +1,56 @@
+* For more detailed and additional help please refer to User_Manual.pdf.
+
+** To close this help menu, please press the "Help" button again. **
+
+------- Operation -------
+- The MATLAB scripts must be in the current working folder in MATLAB. Data files 
+can be placed anywhere.
+- Open  and run PDSI_Tool_Launcher.m to start the tool.
+- To operate the GUI, load your precipitation, temperature, and AWC data using the 
+"Load Data" buttons, select your desired PET calculation method and calibration 
+period, and click "Run".
+
+------- Temperature and Precipitation Inputs -------
+- The US Historical Climate Network (USHCN) has historical temperature and 
+precipitation data available for US stations at 
+http://cdiac.ornl.gov/epubs/ndp/ushcn/access.html.
+- Data must be consecutive (i.e., no gaps) and combined into one .txt file. Do not 
+include column headers.
+- Data should be chronologically organized into four columns: Column 1 is the 
+latitude in degrees, Column 2 is the year, Column 3 is temperature, and Column 4 is 
+precipitation.
+- Note that each temperature and precipitation observation must have a latitude and 
+a year associated with it.
+- If there are data for multiple locations, make sure that the data are arranged in the 
+same order.
+- Temperature and precipitation data should be input into the program in degrees 
+Fahrenheit and inches, respectively.
+
+-------- Available Water Capacity (AWC) Input --------
+- Different locations have different field capacities. An AWC value for each location 
+must be loaded into the program in inches.
+- AWC data should be organized in a column in one .txt file. The AWCs should be 
+organized in the same location order as the temperature and precipitation data.
+- Note that only one AWC value is needed per location (i.e. the number of AWC 
+values must equal the number of stations).
+
+------- Calibration Period -------
+- The calibration period is used to calculate the "Climatologically Appropriate for 
+Existing Conditions" (CAFEC) precipitation for a location.
+- The CAFEC is used to calculate weighting factors used in the Z-Index calculation 
+(see Palmer, 1965).
+- NOAA uses the period January 1931 to December 1990 as its calibration period 
+(see Karl, 1986), and this option is provided.
+- In the absence of long data records or to use a more comprehensive timespan, the 
+option is also provided to use the full record as the calibration period.
+
+------- Output Details -------
+- Units for the output of the PET calculations are in inches. Main drought index 
+outputs are PET, Z-Index, PDSI, and PHDI (see Palmer, 1965).
+- Results are output into a text file (Palmer.txt) that is saved in the working folder of 
+the current directory. The text file should be opened in Notepad or imported into 
+Excel.
+
+** To close this help menu, please press the "Help" button again. **
+
+* For more detailed and additional help please refer to User_Manual.pdf.
