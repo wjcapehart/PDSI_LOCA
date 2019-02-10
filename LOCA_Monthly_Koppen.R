@@ -858,28 +858,26 @@ ensembles = c( "ACCESS1-0_r1i1p1",
                                  Tn    = tmin_8[lat_j, ],
                                  Tx    = tmax_8[lat_j, ],
                                  Tm    = (tmin_8[lat_j, ]+tmax_8[lat_j, ])/2)
-                 
-      
-              for (Year in hist_year)
-              { # time historical
-                
-                year_k    = which(hist_year == Year)
-                
-                clim_norm = hist %>% filter(year == Year)
-                
-                koeppen_geiger = koeppen_geiger(clim_norm                 = clim_norm,
-                                                A_B_C_special_sub.classes = FALSE,
-                                                clim.resume_verbose       = TRUE,
-                                                class.nr                  = FALSE)
-                
-                koeppen_histo[lon_i,lat_j,year_k] = as.character(koeppen_geiger$class)
-                
-              } # time historical
           
-              for (Year in futr_year)
+              for (year_k in 1:length(futr_year))
               { # time future
                 
-                year_k    = which(futr_year == Year)
+                if (year_k <= length(hist_year))  { # historical cases  
+                  
+                  Year = hist_year[year_k]  
+                  
+                  clim_norm = hist %>% filter(year == Year)
+                  
+                  koeppen_geiger = koeppen_geiger(clim_norm                 = clim_norm,
+                                                  A_B_C_special_sub.classes = FALSE,
+                                                  clim.resume_verbose       = TRUE,
+                                                  class.nr                  = FALSE)
+                  
+                  koeppen_histo[lon_i,lat_j,year_k] = as.character(koeppen_geiger$class)                  
+                  
+                } # historical cases
+                
+                Year = futr_year[year_k]  
                 
                 clim_norm = rcp45 %>% filter(year == Year)
                 
@@ -918,8 +916,6 @@ ensembles = c( "ACCESS1-0_r1i1p1",
                     
         } # latitude
         
-        stopCluster(cl)
-
         #
         # End Parallel Block
         #
