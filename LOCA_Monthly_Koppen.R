@@ -821,9 +821,9 @@ ensembles = c( "ACCESS1-0_r1i1p1",
         # Create Parallel Block Here
         
         print(str_c("     "))
-        print(str_c("   - Beginning Latitude Loop for ", Ensemble ," ", (lon_i*100.0/length(longitude)),"%" ))
+        print(str_c("   - Beginning Latitude Loop for ", Ensemble ," ", (lon_i*100.0/length(longitude)),"% ",Sys.time() ))
         print(str_c("     "))
-        system.time(
+
         for (Latitude in latitude) 
         { # latitude
           
@@ -915,7 +915,7 @@ ensembles = c( "ACCESS1-0_r1i1p1",
           remove(hist, rcp45, rcp85)
                     
         } # latitude 
-        )
+        
         #
         # End Parallel Block
         #
