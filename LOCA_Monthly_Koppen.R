@@ -823,7 +823,7 @@ ensembles = c( "ACCESS1-0_r1i1p1",
         print(str_c("     "))
         print(str_c("   - Beginning Latitude Loop for ", Ensemble ," ", (lon_i*100.0/length(longitude)),"%" ))
         print(str_c("     "))
-        
+        system.time(
         for (Latitude in latitude) 
         { # latitude
           
@@ -904,18 +904,18 @@ ensembles = c( "ACCESS1-0_r1i1p1",
           }  # check for water points
           
           
-          print(str_c(Ensemble,
-                      Longitude,
-                      Latitude,
-                      koeppen_histo[lon_i,lat_j,length(hist_year)],
-                      koeppen_rcp45[lon_i,lat_j,length(futr_year)],
-                      koeppen_rcp85[lon_i,lat_j,length(futr_year)],
-                      sep = " "))
+          #print(str_c(Ensemble,
+          #            Longitude,
+          #            Latitude,
+          #            koeppen_histo[lon_i,lat_j,length(hist_year)],
+          #            koeppen_rcp45[lon_i,lat_j,length(futr_year)],
+          #            koeppen_rcp85[lon_i,lat_j,length(futr_year)],
+          #            sep = " "))
           
           remove(hist, rcp45, rcp85)
                     
-        } # latitude
-        
+        } # latitude 
+        )
         #
         # End Parallel Block
         #

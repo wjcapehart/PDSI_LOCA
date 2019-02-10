@@ -1,0 +1,38 @@
+---
+title: "Parallel Test"
+output: html_notebook
+---
+
+```{r}
+  library(package = "foreach")
+  library(package = "doParallel")
+  library(package = "parallel")
+
+```
+
+```{r}
+# Try in parallel
+mat <- array(NA, dim = c(5,8))
+mat2 <- array(NA, dim = c(5,8))
+
+cl <- makeCluster(2)
+acomb <- function(...) abind(..., along=3)
+
+ for(j in  1:8) {
+   #  registerDoSEQ()
+    # registerDoParallel(cl)
+
+    x = foreach(i = 1:5, ) %dopar% {
+      mat[i, j]  <- i + j
+      mat2[i, j] <- i*10 + j
+
+      paste(i,j,mat[i,j])
+    }
+    print(x)
+
+ }
+parallel::stopCluster(cl)
+mat
+mat2
+```
+
